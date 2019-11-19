@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ulab Student Placement</title>
+
+    <style>
+
+    </style>
+</head>
+<body>
+
+<div id="working-container"></div>
+<div id="entrepreneur-container"></div>
+
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+
+<script>
+    function generateHighChart(_filtered_data_working, _filtered_data_entrepreneur) {
+
+
+        Highcharts.chart('working-container', {
+            chart: {
+                type: 'packedbubble',
+                height: '100%'
+            },
+            title: {
+                text: 'ULAB Students in Different Companies'
+            },
+            tooltip: {
+                useHTML: true,
+                pointFormat: '<b>{point.company_and_post}:</b> {point.name}'
+            },
+            plotOptions: {
+                packedbubble: {
+                    minSize: '50%',
+                    maxSize: '100%',
+                    zMin: 0,
+                    zMax: 1000,
+                    layoutAlgorithm: {
+                        splitSeries: false,
+                        gravitationalConstant: 0.02
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.company_and_post}',
+                        style: {
+                            color: 'black',
+                            textOutline: 'none',
+                            fontWeight: 'normal'
+                        }
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Working In Company',
+                    data: _filtered_data_working
+                }
+            ]
+        });
+
+        Highcharts.chart('entrepreneur-container', {
+            chart: {
+                type: 'packedbubble',
+                height: '100%'
+            },
+            title: {
+                text: 'Entrepreneur ULAB Students'
+            },
+            tooltip: {
+                useHTML: true,
+                pointFormat: '<b>{point.own_company_and_address}:</b> {point.name}'
+            },
+            plotOptions: {
+                packedbubble: {
+                    minSize: '50%',
+                    maxSize: '100%',
+                    zMin: 0,
+                    zMax: 1000,
+                    layoutAlgorithm: {
+                        splitSeries: false,
+                        gravitationalConstant: 0.02
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.own_company_and_address}',
+                        style: {
+                            color: 'black',
+                            textOutline: 'none',
+                            fontWeight: 'normal'
+                        }
+                    }
+                }
+            },
+            series: [
+                {
+                    name: 'Entrepreneur',
+                    data: _filtered_data_entrepreneur
+                }
+            ]
+        });
+    }
+
+    function filterAndgenerateHighChart(data) {
+        filtered_data_working = _.filter(data, (one_data) => {
+            if (one_data.company_and_post && one_data.company_and_post !== 'None') {
+                return one_data;
+            }
+        });
+
+        filtered_data_entrepreneur = _.filter(data, (one_data) => {
+            if (one_data.own_company_and_address && one_data.own_company_and_address !== 'None') {
+                return one_data;
+            }
+        });
+
+        generateHighChart(filtered_data_working, filtered_data_entrepreneur)
+    }
+
+    $.getJSON('data.json', function (data) {
+        data.forEach((item, i) => {
+            item.value = 1;
+            if (i === (data.length - 1)) {
+
+                filterAndgenerateHighChart(data)
+            }
+        });
+
+    });
+
+
+</script>
+</body>
+</html>
