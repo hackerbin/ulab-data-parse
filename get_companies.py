@@ -50,15 +50,23 @@ with open('data.json', 'w') as outfile:
 #
 workbook = xlsxwriter.Workbook('companies.xlsx')
 worksheet = workbook.add_worksheet()
-worksheet.write('A1', 'Company')
-worksheet.write('B1', 'Post')
-worksheet.write('C1', 'Name')
-worksheet.write('D1', 'Batch')
+bold = workbook.add_format({'bold': True})
+worksheet.set_column('A:A', 40)
+worksheet.set_column('B:B', 40)
+worksheet.set_column('C:C', 40)
+worksheet.set_column('C:C', 15)
+worksheet.write('A1', 'Company', bold)
+worksheet.write('B1', 'Post', bold)
+worksheet.write('C1', 'Name', bold)
+worksheet.write('D1', 'Batch', bold)
+pos = 2
 for i, item in enumerate(json_data):
-    worksheet.write('A' + str(i + 2), item['company'])
-    worksheet.write('B' + str(i + 2), item['position'])
-    worksheet.write('C' + str(i + 2), item['name'])
-    worksheet.write('D' + str(i + 2), item['batch'])
-    print(i, item)
+    if item['company'] and not item['company'] == 'None':
+        worksheet.write('A' + str(pos), item['company'])
+        worksheet.write('B' + str(pos), item['position'])
+        worksheet.write('C' + str(pos), item['name'])
+        worksheet.write('D' + str(pos), item['batch'])
+        pos += 1
+        print(i, item)
 
 workbook.close()

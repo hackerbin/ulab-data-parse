@@ -1,6 +1,6 @@
 venv
 .vscode
 .idea
-*.xlsx
 data.json
 response.xlsx
+companies.xlsx
